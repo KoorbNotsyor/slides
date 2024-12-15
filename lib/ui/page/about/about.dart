@@ -97,7 +97,7 @@ class About extends StatelessWidget {
                                   ),
                                 ),
                                 child: Text(
-                                    'This is a first venture into using Flutter to develop mulit-platform desktop apps.\n'
+                                    'This is a first venture into using Flutter to develop multi-platform desktop apps.\n'
                                         '\n'
                                         'Why do slideshow apps always go full-screen?\n'
                                         '\n',

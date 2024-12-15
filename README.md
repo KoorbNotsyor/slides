@@ -1,5 +1,10 @@
 # slides
 
+This is a first venture into using Flutter to develop multi-platform desktop apps.
+
+Why do slideshow apps always go full-screen?
+
+
 About Page
 ----------
 The file 'assets/about.json' can be used to set certain values in the About screen:
