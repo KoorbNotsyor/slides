@@ -4,6 +4,9 @@ This is a first venture into using Flutter to develop multi-platform desktop app
 
 Why do slideshow apps always go full-screen?
 
+If you find this code useful please buy me a coffee...
+
+<a href="https://www.buymeacoffee.com/azkn" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 About Page
 ----------
