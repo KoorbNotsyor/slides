@@ -105,11 +105,11 @@ class _FrontState extends State<Front> {
                             onTap: () {
                               setState(() {
                                   if (!_ss.streamIsrunning) {
-//                                    print('START strem...[Tap]');
+                                    //print('START strem...[Tap]');
                                     _ss.startStream();
                                     startStopText = Constants.STOP_SLIDE_SHOW;
                                   } else {
-//                                    print('STOP stream...[Tap]');
+                                    //print('STOP stream...[Tap]');
                                     _ss.stopStream();
                                     startStopText = Constants.START_SLIDE_SHOW;
                                   }
@@ -118,7 +118,7 @@ class _FrontState extends State<Front> {
                             },
                             onDoubleTap: () {
                               setState(() {
-//                                  print('STOP stream...[Double tap]');
+                                  //print('STOP stream...[Double tap]');
                                   _ss.stopStream();
                                   startStopText = Constants.START_SLIDE_SHOW;
                                   navigateTo(context, '/settings');
@@ -167,7 +167,7 @@ class _FrontState extends State<Front> {
                         return GestureDetector(
                             onDoubleTap: () {
                               setState(() {
-//                                print('NO DATA - STOP stream...[Double tap]');
+                                //print('NO DATA - STOP stream...[Double tap]');
                                 _ss.stopStream();
                                 startStopText = Constants.START_SLIDE_SHOW;
                                 navigateTo(context, '/settings');

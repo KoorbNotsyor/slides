@@ -5,7 +5,7 @@ import 'package:slides/control/service_locator.dart';
 import 'package:slides/control/app_state.dart';
 import 'slide.dart';
 import 'slide_data.dart';
-import 'package:slides/data/slideshow_info.dart';
+import 'package:mime/mime.dart';
 
 class SlideDataFolder implements SlideData {
 
@@ -13,7 +13,8 @@ class SlideDataFolder implements SlideData {
 
   bool _newSlideDataFolder = true;
 
-  Directory? _slidesFolder;
+//  Directory? _slidesFolder;
+  Directory _slidesFolder = Directory('');
   List<String>? _slideFiles = [];
   int _slideCount = 0;
   int _slideIndex = -1;
@@ -30,13 +31,16 @@ class SlideDataFolder implements SlideData {
   }
 
   String? getSlideSource() {
+    print('Folder[${appState.slideShowInfo.folderPath}]');
     return appState.slideShowInfo.folderPath;
   }
 
   Slide? getNextSlide() {
 
+    /*
     if (_newSlideDataFolder) {
       _slidesFolder = new Directory(appState.slideShowInfo.folderPath);
+      print('Folder[${appState.slideShowInfo.folderPath}]');
       if (_slidesFolder != null) {
         _slideFiles = _slidesFolder
             ?.listSync()
@@ -46,6 +50,40 @@ class SlideDataFolder implements SlideData {
         _newSlideDataFolder = false;
         _slideIndex = -1; // re-set
       }
+    }
+    */
+
+    /*
+     * ? Possibly, instead of file extensions, use:
+
+      import 'package:mime/mime.dart';
+
+      bool isImage(String path) {
+        final mimeType = lookupMimeType(path);
+
+        return mimeType.startsWith('image/');
+      }
+
+     *
+     */
+    if (_newSlideDataFolder) {
+      _slideFiles = [];
+      _slidesFolder = new Directory(appState.slideShowInfo.folderPath);
+      //print('Folder[${appState.slideShowInfo.folderPath}]');
+      List<FileSystemEntity> fse = _slidesFolder.listSync();
+      if(fse.isNotEmpty) {
+        //print('FSE[] not empty...');
+        //fse.forEach((entry) {
+        //  print('+path[${entry.path}]');
+        //});
+        _slideFiles = fse.map((item) => item.path)
+                        .where((item) => item.hasEnding(Constants.IMAGE_FILE_EXTENSIONS))
+                        .toList(growable:false);
+      } else {
+        //print('FSE[] is empty...');
+      }
+      _newSlideDataFolder = false;
+      _slideIndex = -1; // re-set
     }
     _s = null;
     if (_slideFiles != null) {
