@@ -54,6 +54,7 @@ class _FrontState extends State<Front> {
     //appState.showInfo.value.display();
 
     return Scaffold(
+      backgroundColor: Colors.black,
 //      appBar: AppBar(
 //        title: const Text('Slides'),
 //      ),
@@ -63,33 +64,11 @@ class _FrontState extends State<Front> {
         child: ValueListenableBuilder<SlideshowInfo> (
           valueListenable: appState.showInfo,
           builder: (BuildContext context, _, child) {
-                return ListView(
-                children: [
+//                return ListView(
 
-//                  const SizedBox(height: 10,),
-//
-//                  Text(_ss.slideSource ?? '',
-//                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-//
-//                  const SizedBox(height: 10,),
+//                children: [
 
-/*                  ElevatedButton(onPressed: () {
-                    // Start or Stop...
-                    setState(() {
-                      if (!_ss.streamIsrunning) {
-                        _ss.startStream();
-                        startStopText = Constants.STOP_SLIDE_SHOW;
-                      } else {
-                        _ss.stopStream();
-                        startStopText = Constants.START_SLIDE_SHOW;
-                      }
-                    });
-                    }, child: Text(startStopText)
-                  ),
-*/
-//                  const SizedBox(height: 10,),
-
-                  StreamBuilder <Slide> (
+                  return StreamBuilder <Slide> (
                     initialData: null,
                     stream: _ss.slideStream,
                     builder: (context, snapshot) {
@@ -105,7 +84,7 @@ class _FrontState extends State<Front> {
                             onTap: () {
                               setState(() {
                                   if (!_ss.streamIsrunning) {
-                                    //print('START strem...[Tap]');
+                                    //print('START stream...[Tap]');
                                     _ss.startStream();
                                     startStopText = Constants.STOP_SLIDE_SHOW;
                                   } else {
@@ -129,17 +108,29 @@ class _FrontState extends State<Front> {
 
                               children: [
 
-                                Container(
+                                SizedBox(
                                   //height: double.infinity,
                                   width: double.infinity,
 
                                   child: Image.file(
                                       File(s.getPath),
                                       gaplessPlayback: true,
-                                      fit: BoxFit.contain //BoxFit.fitHeight //BoxFit.cover //BoxFit.contain,
+                                      fit: BoxFit.fitHeight //BoxFit.fitHeight //BoxFit.cover //BoxFit.contain,
                                   )
 
                                 ),
+
+                                /*
+                                FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: Image.file(
+                                        File(s.getPath),
+                                        gaplessPlayback: true,
+                                        //fit: BoxFit.contain //BoxFit.fitHeight //BoxFit.cover //BoxFit.contain,
+                                    )
+
+                                ),
+                                */
 
                                 Positioned(
                                   bottom: 10,
@@ -186,10 +177,10 @@ class _FrontState extends State<Front> {
                       }
 
                     }
-                  ),
+                  );
 
-                ],
-                );
+//                ],
+//                );
           }
       ),
     )

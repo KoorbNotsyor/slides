@@ -63,7 +63,7 @@ class AppState {
       _version = _packageInfo.version;
       _buildNumber = _packageInfo.buildNumber;
 
-      //print('App [$_appName] Package [$_packageName] Version [$_version] Build [$_buildNumber]');
+      print('App [$_appName] Package [$_packageName] Version [$_version] Build [$_buildNumber]');
 
       setupOK = true;
     } catch (e) {

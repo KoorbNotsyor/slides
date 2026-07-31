@@ -30,6 +30,24 @@ If any values are missing then default 'harmless' values are used.
 #TOOD #6 package as AppImage
 #TODO #7 package as .apk
 
+# Linux Desktop
 
+**slides.desktop file**
 
+    [Desktop Entry]
+    Type=Application
+    Version=3.0.0+1
+    Name=Slides
+    GenericName=Slide show
+    Icon=slides
+    Exec=slides
+    Categories=Graphics;Utility;
+    Keywords=Slideshow;Flutter;
+    StartupNotify=true
+    Actions=New;
+    
+    [Desktop Action New]
+    Name=New
+    Exec=slides
+    
 
