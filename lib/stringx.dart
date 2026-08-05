@@ -10,6 +10,16 @@ extension Stringx on String {
     return false;
   }
 
+  List<String> test() {
+    return ['aaa','bbb','ccc'];
+  }
+
+  // String separated by ','  to list...
+  List<String> decompose() {
+    // Remove all white space.
+    return this.replaceAll(RegExp(r"\s+"), "").split(',');
+  }
+
   // Check if this string represents an integer value within the given range...
   bool inRange({int minValue = 0, int maxValue = 0, bool includeMin = true, bool includeMax = true}) {
     bool _inRange = false;

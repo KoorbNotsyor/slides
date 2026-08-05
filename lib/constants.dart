@@ -3,10 +3,10 @@ class Constants {
   static const String START_SLIDE_SHOW = "Start slide show";
   static const String STOP_SLIDE_SHOW = "Stop slide show";
 
-  static const IMAGE_FILE_EXTENSIONS = [".jpg", ".jpeg" , ".webp", ".gif" , ".png"];
+  static const String IMAGE_FILE_EXTENSIONS = 'jpg,jpeg,webp,gif,png';
 
   static const int MINIMUM_DURATION = 50;
-  static const int MAXIMUM_DURATION = 10000;
+  //static const int MAXIMUM_DURATION = 10000;
 
   // About screnn info keys
   static const String ABOUT_EMAIL_TO = "emailTo";

@@ -134,7 +134,7 @@ Widget buildHomeButton(BuildContext context) {
   );
 }
 
-Widget IntegerBoxField(
+Widget exIntegerBoxField( //******!!!
 {
     String? labelText,
     int initialVale = 0,
@@ -151,6 +151,7 @@ Widget IntegerBoxField(
     padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
     child: TextFormField(
       autofocus: false,
+      selectAllOnFocus: false,
       controller: tec,
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
@@ -168,5 +169,40 @@ Widget IntegerBoxField(
         onChanged(int.tryParse(value) ?? 0);
       }
      )
+  );
+}
+
+Widget IntegerBoxField(
+    {
+      String? labelText,
+      int initialVale = 0,
+      TextEditingController? tec,
+      FocusNode? fn,
+      required ValueChanged<int> onChanged,
+      String? Function(String?)? validationFunction
+    }
+    ) {
+  tec?.text = initialVale.toString();
+  return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+      child: TextFormField(
+          autofocus: false,
+          controller: tec,
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          textInputAction: TextInputAction.next,
+          validator: validationFunction,
+          decoration: new InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always
+          ),
+          focusNode: fn,
+          onChanged:  (value) {
+            onChanged(int.tryParse(value) ?? 0);
+          }
+      )
   );
 }

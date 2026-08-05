@@ -22,12 +22,6 @@ class _SettingsFormState extends State<SettingsForm> {
   late GlobalKey<FormState> theFormKey;
 
   late AutovalidateMode autoValidate;
-  late TextEditingController? _durationTextController;
-  late FocusNode _durationTextFocusNode;
-  late TextEditingController? _durationMinTextController;
-  late FocusNode _durationMinTextFocusNode;
-  late TextEditingController? _durationMaxTextController;
-  late FocusNode _durationMaxTextFocusNode;
 
   String? _folder;
   bool _repeat = false;
@@ -54,6 +48,7 @@ class _SettingsFormState extends State<SettingsForm> {
   }
 
   void _processForm(BuildContext context) {
+    //_showInfo.display('OUT');
     appState.slideShowInfo = _showInfo;
     appState.saveSlideShowDetails();
     navigateOut(context);
@@ -69,26 +64,22 @@ class _SettingsFormState extends State<SettingsForm> {
     };
   }
 
-  int _setSliderMaxValue() {
-    if (_showInfo.maxDuration < _showInfo.minDuration) {
-      return _showInfo.minDuration;
+  String? _checkMinValue(String? v , min) {
+    int? value = int.tryParse(v ?? '0');
+    value = value ?? 0;
+    final bool ok = value >= min;
+    if (ok) {
+      return null;
+    } else {
+      return '[Minimum $min]';
     }
-    return _showInfo.maxDuration;
   }
 
-  int _setSliderMinValue() {
-    if (_showInfo.minDuration > _showInfo.maxDuration) {
-      return _showInfo.maxDuration;
-    }
-    return _showInfo.minDuration;
-  }
-
-  void _checkSliderDurationValue() {
-    if (_showInfo.duration < _showInfo.minDuration) {
-      _showInfo.duration = _showInfo.minDuration;
-    }
-    else if (_showInfo.duration > _showInfo.maxDuration) {
-      _showInfo.duration = _showInfo.maxDuration;
+  int _setMaxValue(int initialValue , min) {
+    if (initialValue >= min) {
+      return initialValue;
+    } else {
+      return min;
     }
   }
 
@@ -98,27 +89,15 @@ class _SettingsFormState extends State<SettingsForm> {
 
     appState = getIt.get<AppState>();
     _showInfo = SlideshowInfo.copy(appState.slideShowInfo);
+    //_showInfo.display('IN');
 
     theFormKey = GlobalKey<FormState>();
-    autoValidate = AutovalidateMode.onUserInteraction;   //disabled; // No validation on every change at first...
-    _durationTextController = TextEditingController();
-    _durationTextFocusNode = FocusNode();
-    _durationMinTextController = TextEditingController();
-    _durationMinTextFocusNode = FocusNode();
-    _durationMaxTextController = TextEditingController();
-    _durationMaxTextFocusNode = FocusNode();
-
+    autoValidate = AutovalidateMode.disabled;   //disabled; // No validation on every change at first...
   }
 
 
   @override
   void dispose() {
-    _durationMaxTextFocusNode.dispose();
-    _durationMaxTextController?.dispose();
-    _durationMinTextFocusNode.dispose();
-    _durationMinTextController?.dispose();
-    _durationTextFocusNode.dispose();
-    _durationTextController?.dispose();
     super.dispose();
   }
 
@@ -139,211 +118,292 @@ class _SettingsFormState extends State<SettingsForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Card(
-                    elevation: 8,
-                    child: Column(
-                        children: <Widget>[
+                  elevation: 8,
+                  child: Column(
+                  children: <Widget>[
 
-                          ListTile(
-                            leading: const Icon(Icons.folder),
-                            title: Text('Slides Folder'),
-                            subtitle: Text(_showInfo.folderPath)
-                          ),
-                          ListTile(
-                              leading: const Icon(Icons.launch),
-                              title: ElevatedButton(
-                                onPressed: () async {
-                                  _folder = await FilePicker.platform.getDirectoryPath();
-                                  if (_folder == null) {
-                                    //print("No folder selected");
-                                  } else {
-                                    // Check if any images in folder???
-                                    setState(() {
-                                      _showInfo.folderPath = _folder;
-                                      _showInfo.newFolder = true;
-                                      //print(_folder);
-                                    });
-                                  }
-                                },
-                                child: const Text("Select slide folder..."),
-                              ),
-                          ),
+                    ListTile(
+                      leading: const Icon(Icons.folder),
+                      title: Text('Slides Folder', style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(_showInfo.folderPath)
+                    ),
 
-                          const Divider(
-                            height: 12.0,
-                          ),
-
-                          ListTile(
-                            leading: const Icon(Icons.launch),
-                            title: ElevatedButton(
-                              onPressed: () async {
-                                setState(() {
-                                  _showInfo.folderPath = "";
-                                  _showInfo.newFolder = true;
-                                  //print(_folder);
-                                });
-                              },
-                              child: const Text("Clear slide folder..."),
-                            ),
-                          ),
-
-                          const Divider(
-                            height: 12.0,
-                          ),
-
-                          Row(
-                            children: [
-                              Text(
-                               'Interval (ms): ${_showInfo.duration.toString()} - (s) ${(_showInfo.duration.toDouble()/1000.0).toString()}',
-                               style: TextStyle(fontWeight: FontWeight.bold)
-                              )
-                            ]
-                          ),
-
-                          const Divider(
-                            height: 12.0,
-                          ),
-
-                          Row(
-                            children: [
-                              Expanded(child:
-                              Container(
-                                height: 80,
-                                child:
-                                  IntegerBoxField(
-                                    labelText: "min",
-                                    initialVale: _showInfo.minDuration,
-                                    minValue: Constants.MINIMUM_DURATION,
-                                    maxValue: Constants.MAXIMUM_DURATION,
-                                    tec: _durationMinTextController,
-                                    fn: _durationMinTextFocusNode,
-                                    validationFunction:(value) {
-                                      return _checkIntegerRange(value,Constants.MINIMUM_DURATION,Constants.MAXIMUM_DURATION);
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                      _showInfo.minDuration = value;
-                                      _checkSliderDurationValue();
-                                      });
-                                    }
-                                  )
-                                )
-                              ),
-                              Expanded(child:
-                              Container(
-                                height:80,
-                                child:
-                                  IntegerBoxField(
-                                    labelText: "max",
-                                    initialVale: _showInfo.maxDuration,
-                                    minValue: Constants.MINIMUM_DURATION,
-                                    maxValue: Constants.MAXIMUM_DURATION,
-                                    tec: _durationMaxTextController,
-                                    fn: _durationMaxTextFocusNode,
-                                    validationFunction:(value) {
-                                      return _checkIntegerRange(value,Constants.MINIMUM_DURATION,Constants.MAXIMUM_DURATION);
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _showInfo.maxDuration = value;
-                                        _checkSliderDurationValue();
-                                      });
-                                    }
-                                  )
-                                )
-                              )
-                            ]
-                          ),
-
-                          Slider(
-                            min: _setSliderMinValue().toDouble(),
-                            max: _setSliderMaxValue().toDouble(),
-                            value: _showInfo.duration.toDouble(),
-                            divisions: 10,
-                            onChanged: (value) {
+                    ListTile(
+                        leading: const Icon(Icons.launch),
+                        title: ElevatedButton(
+                          onPressed: () async {
+                            _folder = await FilePicker.platform.getDirectoryPath();
+                            if (_folder == null) {
+                              //print("No folder selected");
+                            } else {
+                              // Check if any images in folder???
                               setState(() {
-                                _showInfo.duration = value.round();
+                                _showInfo.folderPath = _folder;
+                                _showInfo.newFolder = true;
+                                //print(_folder);
+                              });
+                            }
+                          },
+                          child: const Text("Select slide folder..."),
+                        ),
+                    ),
+
+                    ListTile(
+                      leading: const Icon(Icons.launch),
+                      title: ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            _showInfo.folderPath = "";
+                            _showInfo.newFolder = true;
+                            //print(_folder);
+                          });
+                        },
+                        child: const Text("Clear slide folder..."),
+                      ),
+                    ),
+
+                    const Divider(
+                      height: 12.0,
+                    ),
+
+                    ListTile(
+                      title: const Text('Media File Extensions', style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                        child:
+                        TextFormField(
+                            enabled: true,
+                            autofocus: false,
+                            selectAllOnFocus: false,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            initialValue: _showInfo.mediaTypeExtensions.isNotEmpty ? _showInfo.mediaTypeExtensions : Constants.IMAGE_FILE_EXTENSIONS,
+                            keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.next,
+                            validator: (value) {
+                              //print('Validate file extensions value [$value]');
+                              return null;
+                            },
+                            onChanged:  (value) {
+                              setState(() {
+                                //print ('BEFORE: [${_showInfo.mediaTypeExtensions}]');
+                                //print('Changed file extensions value [$value]');
+                                _showInfo.mediaTypeExtensions = value;
                               });
                             },
-                          ),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: '',
+                                floatingLabelBehavior: FloatingLabelBehavior.always
+                            )
+                        )
+                      )
+                    ),
 
-                          const Divider(
-                            height: 12.0,
-                          ),
+                    const Divider(
+                      height: 12.0,
+                    ),
 
-                          ListTile(
-                              title: Text('Random varying intervals'),
-                              trailing:Checkbox(
-                                value: _showInfo.random,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _showInfo.random = value;
-                                  });
-                                },
+                    ListTile(
+                        title: Text('Random varying intervals', style: TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text('from ${(_showInfo.minDuration.toDouble()/1000.0).toString()} (s) to ${(_showInfo.maxDuration.toDouble()/1000.0).toString()} (s)'),
+                        trailing:Checkbox(
+                          value: _showInfo.random,
+                          onChanged: (value) {
+                            setState(() {
+                              _showInfo.random = value;
+                            });
+                          },
+                        )
+                    ),
+
+                    Row(
+                      children: [
+                        Expanded(child:
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                            child:
+                            TextFormField(
+                              enabled: _showInfo.random,
+                              autofocus: false,
+                              selectAllOnFocus: false,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              initialValue: '${_showInfo.minDuration}',
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                return _checkMinValue(value,Constants.MINIMUM_DURATION);
+                              },
+                              onChanged:  (value) {
+                                setState(() {
+                                  _showInfo.minDuration = int.tryParse(value) ?? 0;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Random min (ms)',
+                                  floatingLabelBehavior: FloatingLabelBehavior.always
                               )
-                          ),
+                            )
+                        ),
+                        ),
 
-                          const Divider(
-                            height: 4.0,
-                          ),
-
-                          ListTile(
-                              title: Text('Repeat slide show'),
-                              trailing:Checkbox(
-                                value: _showInfo.repeat,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _showInfo.repeat = value;
-                                  });
-                                },
+                        Expanded(child:
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                            child:
+                            TextFormField(
+                              enabled: _showInfo.random,
+                              autofocus: false,
+                              selectAllOnFocus: false,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              initialValue: '${_showInfo.maxDuration}',
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                return _checkMinValue(value,_showInfo.minDuration);
+                              },
+                              onChanged:  (value) {
+                                setState(() {
+                                  _showInfo.maxDuration = int.tryParse(value) ?? 0;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Random max (ms)',
+                                  floatingLabelBehavior: FloatingLabelBehavior.always
                               )
-                          ),
+                            )
+                        ),
+                        )
+                      ]
+                    ),
 
-                          const Divider(
-                            height: 4.0,
-                          ),
+                    const Divider(
+                      height: 12.0,
+                    ),
 
-                          ListTile(
-                              title: Text('Show label'),
-                              trailing:Checkbox(
-                                value: _showInfo.showLabel,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _showInfo.showLabel = value;
-                                  });
-                                },
-                              )
-                          ),
+                    ListTile(
+                      title: const Text('Duration', style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text('(ms): ${_showInfo.duration.toString()} - (s) ${(_showInfo.duration.toDouble()/1000.0).toString()}'),
+                    ),
 
-                          Row(
-                            children: [
-
-                              ElevatedButton(
-                                onPressed: () async {
-                                  _cancelForm(context);
-                                },
-                                child: const Text("Cancel"),
-                              ),
-
-                              ElevatedButton(
-                                onPressed: () async {
-                                  if (theFormKey.currentState!.validate()) {
-                                    // Form is valid...
-                                    //ScaffoldMessenger.of(context).showSnackBar(
-                                    //  const SnackBar(content: Text('Processing Data')),
-                                    //);
-                                    _processForm(context);
-                                   }
-                                },
-                                child: const Text("Save"),
-                              ),
-
-                            ]
-                          )
-
-                        ]
+                    Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                    child:
+                    TextFormField(
+                      enabled: !_showInfo.random,
+                      autofocus: false,
+                      selectAllOnFocus: false,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      initialValue: '${_showInfo.duration}',
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        return _checkMinValue(value,Constants.MINIMUM_DURATION);
+                      },
+                      onChanged:  (value) {
+                        setState(() {
+                          _showInfo.duration = int.tryParse(value) ?? 0;
+                        });
+                      },
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: '',
+                          floatingLabelBehavior: FloatingLabelBehavior.always
+                      )
                     )
+                    ),
+
+                    const Divider(
+                      height: 4.0,
+                    ),
+
+                    ListTile(
+                        title: const Text('Shuffle slide show'),
+                        trailing:Checkbox(
+                          value: _showInfo.shuffle,
+                          onChanged: (value) {
+                            setState(() {
+                              _showInfo.shuffle = value;
+                            });
+                          },
+                        )
+                    ),
+
+                    const Divider(
+                      height: 4.0,
+                    ),
+
+                    ListTile(
+                        title: const Text('Repeat slide show'),
+                        trailing:Checkbox(
+                          value: _showInfo.repeat,
+                          onChanged: (value) {
+                            setState(() {
+                              _showInfo.repeat = value;
+                            });
+                          },
+                        )
+                    ),
+
+                    const Divider(
+                      height: 4.0,
+                    ),
+
+                    ListTile(
+                        title: const Text('Show label'),
+                        trailing:Checkbox(
+                          value: _showInfo.showLabel,
+                          onChanged: (value) {
+                            setState(() {
+                              _showInfo.showLabel = value;
+                            });
+                          },
+                        )
+                    ),
+
+                    const Divider(
+                      height: 4.0,
+                    ),
+
+                    Row(
+                      children: [
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            _cancelForm(context);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (theFormKey.currentState!.validate()) {
+                              // Form is valid...
+                              //ScaffoldMessenger.of(context).showSnackBar(
+                              //  const SnackBar(content: Text('Processing Data')),
+                              //);
+                              _processForm(context);
+                             }
+                          },
+                          child: const Text("Save"),
+                        ),
+
+                      ]
+                    )
+
+                  ]
+                  )
                 ),
-                //buildRegisterButton(context),
               ],
             ),
           )

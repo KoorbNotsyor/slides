@@ -24,11 +24,11 @@ The file 'assets/about.json' can be used to set certain values in the About scre
 
 If any values are missing then default 'harmless' values are used.
 
-#TODO gitify
-#TOOD #4 image size, full window/screen option?
-#TODO #5 set up Windows environment , build .exe. Virtual on Linux?
-#TOOD #6 package as AppImage
-#TODO #7 package as .apk
+POST 4.2.0
+
+# TODO slide check for webm,mp4,mkv use media-kit video
+# TODO add media-kit usage
+# TODO add pause on current slide e.g. space bar or button
 
 # Linux Desktop
 

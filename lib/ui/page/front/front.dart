@@ -115,7 +115,17 @@ class _FrontState extends State<Front> {
                                   child: Image.file(
                                       File(s.getPath),
                                       gaplessPlayback: true,
-                                      fit: BoxFit.fitHeight //BoxFit.fitHeight //BoxFit.cover //BoxFit.contain,
+                                      fit: BoxFit.fitHeight,
+                                      errorBuilder:
+                                        (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                        final String msg = 'Failed to load ${s.getPath} ERROR [${exception.toString()}]';
+                                        return Text(msg,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                    backgroundColor: Colors.white
+                                                ));
+                                    },
                                   )
 
                                 ),

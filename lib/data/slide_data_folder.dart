@@ -22,6 +22,7 @@ class SlideDataFolder implements SlideData {
   Slide? _s;
   String _slidePath = '';
   String _slideTitle = '';
+  bool _shuffle = false;
 
   final _reSlash = RegExp('[/\]');
 
@@ -31,27 +32,10 @@ class SlideDataFolder implements SlideData {
   }
 
   String? getSlideSource() {
-    print('Folder[${appState.slideShowInfo.folderPath}]');
     return appState.slideShowInfo.folderPath;
   }
 
   Slide? getNextSlide() {
-
-    /*
-    if (_newSlideDataFolder) {
-      _slidesFolder = new Directory(appState.slideShowInfo.folderPath);
-      print('Folder[${appState.slideShowInfo.folderPath}]');
-      if (_slidesFolder != null) {
-        _slideFiles = _slidesFolder
-            ?.listSync()
-            ?.map((item) => item.path)
-            ?.where((item) => item.hasEnding(Constants.IMAGE_FILE_EXTENSIONS))
-            ?.toList(growable: false);
-        _newSlideDataFolder = false;
-        _slideIndex = -1; // re-set
-      }
-    }
-    */
 
     /*
      * ? Possibly, instead of file extensions, use:
@@ -66,33 +50,38 @@ class SlideDataFolder implements SlideData {
 
      *
      */
+
     if (_newSlideDataFolder) {
       _slideFiles = [];
       _slidesFolder = new Directory(appState.slideShowInfo.folderPath);
-      //print('Folder[${appState.slideShowInfo.folderPath}]');
       List<FileSystemEntity> fse = _slidesFolder.listSync();
       if(fse.isNotEmpty) {
-        //print('FSE[] not empty...');
-        //fse.forEach((entry) {
-        //  print('+path[${entry.path}]');
-        //});
+        final String extensions = appState.slideShowInfo.mediaTypeExtensions;
+        List<String> extensionsList = extensions.toLowerCase().decompose();
+        //print('Extensions: [$extensions]');
+        //print('Extensions list: $extensionsList');
         _slideFiles = fse.map((item) => item.path)
-                        .where((item) => item.hasEnding(Constants.IMAGE_FILE_EXTENSIONS))
+                        .where((item) => item.toLowerCase().hasEnding(extensionsList))
                         .toList(growable:false);
       } else {
-        //print('FSE[] is empty...');
+      //print('FSE[] is empty...');
       }
       _newSlideDataFolder = false;
       _slideIndex = -1; // re-set
+      _shuffle = appState.slideShowInfo.shuffle;
     }
+
     _s = null;
     if (_slideFiles != null) {
       _slideCount = _slideFiles?.length ?? 0;
       if (_slideCount > 0) {
 
         // Got some images... (at least 1)
-
         _slideIndex += 1;  // set to -1 for a new folder, so counts 0,..,N-1
+
+        // Shuffle if requested...
+        if (_shuffle && (_slideIndex == 0 )) _slideFiles?.shuffle();
+
         _sendSlide = true;
         if (_slideIndex >= _slideCount) {
           // Reached end... do we repeat?
