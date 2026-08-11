@@ -12,7 +12,7 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(

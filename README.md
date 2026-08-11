@@ -24,11 +24,9 @@ The file 'assets/about.json' can be used to set certain values in the About scre
 
 If any values are missing then default 'harmless' values are used.
 
-POST 4.2.0
+POST 6.0.0
 
-# TODO slide check for webm,mp4,mkv use media-kit video
-# TODO add media-kit usage
-# TODO add pause on current slide e.g. space bar or button
+# TODO About info update...
 
 # Linux Desktop
 

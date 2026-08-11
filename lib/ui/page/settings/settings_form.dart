@@ -9,7 +9,11 @@ import 'package:slides/ui/widgets/common_widgets.dart';
 import 'package:slides/constants.dart';
 import 'package:slides/ui/app/drawer.dart';
 
+const double DIVIDER_HEIGHT = 8.0;
+
 class SettingsForm extends StatefulWidget {
+  const SettingsForm({super.key});
+
   @override
   _SettingsFormState createState() => _SettingsFormState();
 }
@@ -24,8 +28,6 @@ class _SettingsFormState extends State<SettingsForm> {
   late AutovalidateMode autoValidate;
 
   String? _folder;
-  bool _repeat = false;
-  int _duration = 0;
 
   navigateTo(BuildContext context, String route) {
      Navigator.pushNamed(context,route);
@@ -106,11 +108,17 @@ class _SettingsFormState extends State<SettingsForm> {
     //_showInfo.display();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Slides'),
+        toolbarHeight: 28,
+        title: const Text('',
+                          style: TextStyle(
+                            fontSize: 12,
+                            height: 12
+                          ),
+        )
       ),
       drawer: const AppDrawer(),
       body: SingleChildScrollView(
-        padding:EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           child: Form(
             key: theFormKey,
             autovalidateMode: autoValidate,
@@ -124,7 +132,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
                     ListTile(
                       leading: const Icon(Icons.folder),
-                      title: Text('Slides Folder', style: TextStyle(fontWeight: FontWeight.bold)),
+                      title: const Text('Slides Folder', style: TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(_showInfo.folderPath)
                     ),
 
@@ -162,14 +170,12 @@ class _SettingsFormState extends State<SettingsForm> {
                       ),
                     ),
 
-                    const Divider(
-                      height: 12.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT),
 
                     ListTile(
                       title: const Text('Media File Extensions', style: TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                         child:
                         TextFormField(
                             enabled: true,
@@ -199,12 +205,10 @@ class _SettingsFormState extends State<SettingsForm> {
                       )
                     ),
 
-                    const Divider(
-                      height: 12.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT),
 
                     ListTile(
-                        title: Text('Random varying intervals', style: TextStyle(fontWeight: FontWeight.bold)),
+                        title: const Text('Random varying intervals', style: TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text('from ${(_showInfo.minDuration.toDouble()/1000.0).toString()} (s) to ${(_showInfo.maxDuration.toDouble()/1000.0).toString()} (s)'),
                         trailing:Checkbox(
                           value: _showInfo.random,
@@ -220,7 +224,7 @@ class _SettingsFormState extends State<SettingsForm> {
                       children: [
                         Expanded(child:
                         Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                             child:
                             TextFormField(
                               enabled: _showInfo.random,
@@ -252,7 +256,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
                         Expanded(child:
                         Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                             child:
                             TextFormField(
                               enabled: _showInfo.random,
@@ -284,9 +288,7 @@ class _SettingsFormState extends State<SettingsForm> {
                       ]
                     ),
 
-                    const Divider(
-                      height: 12.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT),
 
                     ListTile(
                       title: const Text('Duration', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -294,7 +296,7 @@ class _SettingsFormState extends State<SettingsForm> {
                     ),
 
                     Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                     child:
                     TextFormField(
                       enabled: !_showInfo.random,
@@ -323,9 +325,7 @@ class _SettingsFormState extends State<SettingsForm> {
                     )
                     ),
 
-                    const Divider(
-                      height: 4.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT/2),
 
                     ListTile(
                         title: const Text('Shuffle slide show'),
@@ -339,9 +339,7 @@ class _SettingsFormState extends State<SettingsForm> {
                         )
                     ),
 
-                    const Divider(
-                      height: 4.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT/2),
 
                     ListTile(
                         title: const Text('Repeat slide show'),
@@ -355,9 +353,7 @@ class _SettingsFormState extends State<SettingsForm> {
                         )
                     ),
 
-                    const Divider(
-                      height: 4.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT/2),
 
                     ListTile(
                         title: const Text('Show label'),
@@ -371,9 +367,7 @@ class _SettingsFormState extends State<SettingsForm> {
                         )
                     ),
 
-                    const Divider(
-                      height: 4.0,
-                    ),
+                    const Divider(height: DIVIDER_HEIGHT/2),
 
                     Row(
                       children: [
